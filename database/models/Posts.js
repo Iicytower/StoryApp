@@ -17,7 +17,7 @@ module.exports = sequelize => {
             owner: {
                 type:STRING,
                 allowNull:false,
-            }
+            },
         },
         {
             sequelize,
