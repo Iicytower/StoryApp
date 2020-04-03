@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
 const { User } = require('../database/database');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 
 module.exports = {
     register: async (req, res) => {
-        const { nickname, name, password } = req.body
+        const { email, nickname, name, password } = req.body
 
         try {
             //////////////////////////////////////////////////////////
@@ -29,6 +30,7 @@ module.exports = {
         try {
 
             const addUser = await User.create({
+                email,
                 nickname,
                 name,
                 password,
@@ -57,10 +59,18 @@ module.exports = {
             // !!doesNicknameExist ? bcrypt.compareSync(password, doesNicknameExist.dataValues.password) : false;
 
             if (!!doesNicknameExist && bcrypt.compareSync(password, doesNicknameExist.dataValues.password)) {
-                res.json({
+                ///////////////////////////////////////////////////////
+
+                const token = jwt.sign({ nickname, role: 'user' }, process.env.JWT_KEY);
+                res.cookie('token', {
+                    secure: process.env.NODE_ENV === 'production',
+                    httpOnly: true,
+                    sameSite: true,
+                }).json({
                     status: 'success',
                     msg: `${nickname}! Welcome in our app.`,
-                });
+                })
+
             } else {
                 res.json({
                     status: 'failure',

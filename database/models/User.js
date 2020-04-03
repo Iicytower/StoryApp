@@ -4,20 +4,24 @@ const bcrypt = require('bcryptjs');
 const { STRING, TEXT } = DataTypes
 
 module.exports = sequelize => {
-    class User extends Model {}
+    class User extends Model { }
     User.init(
         {
-            nickname:{
+            email: {
+                type: STRING,
+                allowNull: false,
+            },
+            nickname: {
                 type: STRING,
                 allowNull: false,
             },
             name: {
                 type: STRING,
-                allowNull: false
+                allowNull: false,
             },
             password: {
                 type: TEXT,
-                allowNull: false
+                allowNull: false,
             }
         },
         {

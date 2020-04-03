@@ -4,6 +4,6 @@ const { Post } = require('../database/database');
 module.exports = {
     add: async (req, res) => {
         console.log(req.body);
-        res.json({status: "success"});
+        await res.json({status: "success"});
     }
 }
