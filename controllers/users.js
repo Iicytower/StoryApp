@@ -34,7 +34,7 @@ module.exports = {
                 nickname,
                 name,
                 password,
-            })
+            });
 
             res.json({
                 status: `succes`,
@@ -47,25 +47,21 @@ module.exports = {
     },
 
     login: async (req, res) => {
-        const { nickname, password } = req.body
-
+        const { nickname, password } = req.body;
         try {
 
             const doesNicknameExist = await User.findOne({
                 where: { nickname },
             });
 
-            // const doesNicknameHaveCorrectPassword = (doesNicknameExist) => 
-            // !!doesNicknameExist ? bcrypt.compareSync(password, doesNicknameExist.dataValues.password) : false;
-
             if (!!doesNicknameExist && bcrypt.compareSync(password, doesNicknameExist.dataValues.password)) {
-                ///////////////////////////////////////////////////////
 
                 const token = jwt.sign({ nickname, role: 'user' }, process.env.JWT_KEY);
-                res.cookie('token', {
+                res.cookie('token', token, {
                     secure: process.env.NODE_ENV === 'production',
                     httpOnly: true,
                     sameSite: true,
+                    maxAge: 1000 * 60 * 60 * 3,
                 }).json({
                     status: 'success',
                     msg: `${nickname}! Welcome in our app.`,
