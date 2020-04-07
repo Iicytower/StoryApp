@@ -9,13 +9,14 @@ module.exports = {
             })
         }
 
-        jwt.verify(req.cookies.token, process.env.JWT_KEY, async (err) => {
+        jwt.verify(req.cookies.token, process.env.JWT_KEY, async (err, decoded) => {
             if (err) {
                 return res.json({
                     status: "failure",
                     msg: "Token is invalid",
                 });
             }
+            req.user = decoded;
                 next();
             
         });
