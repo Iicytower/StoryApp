@@ -2,10 +2,31 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 
-const usersController = require('../controllers/users');
+const { login, register } = require('../controllers/users');
+const { check } = require("express-validator");
+const validator = require("../middlewares/validator");
 
-router.post('/login', bodyParser.json(), usersController.login);
-router.post('/register', bodyParser.json(), usersController.register);
+//password must contain small and big letter, digit and one special character. available characters: ! @ # $ % ^ & * ( )
+const regexpPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[\!\@\#\$\%\^\&\*\(\)])(?=.*[A-Z])(?!.*\s).{8,}$/g;
 
+router.post('/login',
+    bodyParser.json(),
+    [
+        check('nickname').isString(),
+        check('password').isLength({ min: 8, max: 36 }),//.matches(regexpPassword),
+    ],
+    validator(),
+    login);
+
+router.post('/register',
+    bodyParser.json(),
+    [
+        check('email').isEmail(),
+        check('name').isString(),
+        check('nickname').isString(),
+        check('password').isString().isLength({ min: 8, max: 36 }).matches(regexpPassword),
+    ],
+    validator(),
+    register);
 
 module.exports = router;

@@ -1,19 +1,20 @@
 const Sequelize = require('sequelize');
-const { Post } = require('../database/database');
+const { Posts } = require('../database/database');
 
 module.exports = {
     add: async (req, res) => {
+        const { title, description } = req.body;
         try {
-
-
-            console.log("addPost");
-            // const addPost = await Post.create({
-
-            // });
+            const addPost = await Posts.create({
+                title,
+                description,
+                owner: req.user.nickname,
+            });
+            return res.json({ status: "success" });
         } catch (err) {
             throw err;
         }
 
-        await res.json({ status: "success" });
+        // await res.json({ status: "success" });
     }
 }

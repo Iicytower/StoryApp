@@ -8,8 +8,6 @@ module.exports = {
         const { email, nickname, name, password } = req.body
 
         try {
-            //////////////////////////////////////////////////////////
-
             const isNicknameExist = await User.findOne({
                 where: { nickname },
                 attributes: { exclude: ['password'] }
@@ -21,10 +19,8 @@ module.exports = {
                     msg: `Use diffrent nickname. ${nickname} exist.`,
                 });
             }
-
-            //////////////////////////////////////////////////////////
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
 
         try {
@@ -40,12 +36,11 @@ module.exports = {
                 status: `succes`,
                 msg: `success register user ${nickname}`,
             });
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
 
     },
-
     login: async (req, res) => {
         const { nickname, password } = req.body;
         try {
@@ -61,7 +56,7 @@ module.exports = {
                     secure: process.env.NODE_ENV === 'production',
                     httpOnly: true,
                     sameSite: true,
-                    maxAge: 1000 * 60 * 60 * 3,
+                    maxAge: 1000 * 60 * 60 * 8,
                 }).json({
                     status: 'success',
                     msg: `${nickname}! Welcome in our app.`,
@@ -74,8 +69,11 @@ module.exports = {
                 });
             }
 
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw err;
         }
     },
+    logout: async (req, res) => {
+        res.clearCookie('token').redirect(`/`);
+    }
 }
