@@ -6,7 +6,7 @@ const { login, register } = require('../controllers/users');
 const { check } = require("express-validator");
 const validator = require("../middlewares/validator");
 
-//password must contain small and big letter, digit and one special character. available characters: ! @ # $ % ^ & * ( )
+//password must contain small and big letter, digit and special character. available characters: ! @ # $ % ^ & * ( )
 const regexpPassword = /^(?=.*\d)(?=.*[a-z])(?=.*[\!\@\#\$\%\^\&\*\(\)])(?=.*[A-Z])(?!.*\s).{8,}$/g;
 
 router.post('/login',
