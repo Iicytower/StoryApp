@@ -4,7 +4,7 @@ const { User, Posts, PostCategory } = require("../database/database");
 module.exports = {
   add: async (req, res) => {
     //TODO validate data and support errors https://sequelize.org/master/manual/transactions.html
-    const { title, description, language, category } = req.body;
+    const { title, description, language, public, category } = req.body;
     const id = req.user.id;
     try {
       const currentUser = await User.findOne({
@@ -14,6 +14,7 @@ module.exports = {
         title,
         description,
         language,
+        public,
       });
       const addPostCategory = await addPost.createPostCategory(category);
       return res.status(200).json({
@@ -26,11 +27,11 @@ module.exports = {
   },
   remove: async (req, res) => {
     //TODO validate data
-    const { idArr } = req.body;
-    let isPostsExist = true;
+    const { postsId } = req.body;
     let nonExistentPosts = [];
     try {
-      await idArr.forEach(async (id) => {
+      for (let i = 0; i < postsId.length; i++) {
+        const id = postsId[i];
 
         const doesPostExist = await Posts.findOne({
           where: {
@@ -43,19 +44,15 @@ module.exports = {
             postId: id,
           },
         });
-        console.log(!doesPostExist, !doesPostCategoryExist);
         if (!doesPostExist || !doesPostCategoryExist) nonExistentPosts.push(id);
-
-      });
-      console.log(nonExistentPosts);
+      }
     } catch (err) {
       throw err;
     }
 
     try {
-      console.log(nonExistentPosts.length);
-      if (nonExistentPosts.length > 0) {
-        idArr.forEach(async (id) => {
+      if (nonExistentPosts.length === 0) {
+        postsId.forEach(async (id) => {
           const removePostCategory = await PostCategory.destroy({
             where: {
               postId: id,
@@ -67,8 +64,6 @@ module.exports = {
               userId: req.user.id,
             },
           });
-          console.log(removePostCategory);
-          console.log(removePost);
         });
       } else {
         return res.status(404).json({
@@ -81,8 +76,8 @@ module.exports = {
       return res.status(200).json({
         status: "succes",
         msg: "We remove posts from database",
+        postsId,
       });
-
     } catch (err) {
       throw err;
     }
@@ -104,51 +99,23 @@ module.exports = {
       }
     */
 
-    const { postId, ownerId, title, category } = req.body;
-
+    const { postId, ownerId, title, language, public, category } = req.body;
+    // else if
+    let responseObj;
+    let status = 200;
     try {
-      let responseObj;
-      let status = 200;
-      if (ownerId) {
-        const findedPost = await Posts.findOne({
-          where: {
-            id: postId,
-            userId: req.user.id,
-          },
+      if (!!postId) {
+        const findPost = await Posts.findOne({
+          where: { id: postId, },
         });
-
-        if (findedPost === null) {
-          return res.status(404).json({
-            status: "failure",
-            msg: "Post doesn't exist",
-          });
-        }
-
-        const findedPostCategory = await PostCategory.findOne({
-          where: {
-            postId: postId,
-          },
+        const findPostCategory = await PostCategory.findOne({
+          where: { postId, },
         });
-
-        responseObj = findedPost.dataValues;
-        responseObj.category = findedPostCategory.dataValues;
-      } else if (!!title) {
-        //START HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        const findPosts = Posts.findAll({
-          where: {
-            title,
-          },
-        });
-
-        console.log(findPosts);
-        return res.status(200).json(findPosts);
-        responseObj = {};
+        console.log(findPost.dataValues);
+        console.log(findPostCategory.dataValues);
+        
       }
-      return res.status(status).json(responseObj);
-
-      // const showPosts = await Posts.findAll({
-      //   where: searchObj,
-      // });
+      res.status(status).json(responseObj)
     } catch (err) {
       throw err;
     }

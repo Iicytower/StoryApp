@@ -10,7 +10,7 @@ const validator = require("../../middlewares/validator");
 router.delete('/',
     bodyParser.json(),
     [
-        check('idArr').isArray(),
+        check('postsId').isArray(),
     ],
     validator(),
     postsController.remove);

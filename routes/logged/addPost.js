@@ -28,5 +28,4 @@ router.get(
   validator(),
   postsController.add
 );
-//TODO category czy odpowiada określonemu schematowi obiektu
 module.exports = router;
