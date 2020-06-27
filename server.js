@@ -2,7 +2,6 @@ require('dotenv').config();
 require('./database/database');
 
 const http = require("http");
-// import http from 'http';
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require("cookie-parser");

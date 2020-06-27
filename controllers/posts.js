@@ -88,7 +88,7 @@ module.exports = {
     /*
       {
         "postId": 34, 
-        "ownerId": true, //require
+        "ownerId": true, //require. is user search his own posts? if false user search in global searcher, if true only his own posts.
         "title": "example title",
         "category": {
           "fantasy": true,
@@ -99,23 +99,30 @@ module.exports = {
       }
     */
 
+    //this is global searcher. for search owner posts will be second endpoint and for search posts from specific user will be third engine
+
     const { postId, ownerId, title, language, public, category } = req.body;
-    // else if
-    let responseObj;
-    let status = 200;
+
+    let responseObj = {};
     try {
       if (!!postId) {
-        const findPost = await Posts.findOne({
-          where: { id: postId, },
+
+        const findPost = await Posts.findAll({
+          include: [PostCategory],
+          where: { 
+            id: postId, 
+            public: true,
+          },
         });
-        const findPostCategory = await PostCategory.findOne({
-          where: { postId, },
-        });
-        console.log(findPost.dataValues);
-        console.log(findPostCategory.dataValues);
-        
+
+          responseObj = findPost;
+          if (!findPost)
+          return res.status(404).json({
+            status: "failure",
+            msg: "There is no posts meeting the requirements",
+          });
       }
-      res.status(status).json(responseObj)
+      res.status(200).json(responseObj);
     } catch (err) {
       throw err;
     }
