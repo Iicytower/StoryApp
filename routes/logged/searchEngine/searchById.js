@@ -3,9 +3,9 @@ const router = express.Router();
 
 const bodyParser = require('body-parser');
 
-const postsController = require('../../controllers/posts');
+const searchPostsController = require('../../controllers/searchEngine/searchById');
 const { check } = require("express-validator");
-const validator = require("../../middlewares/validator");
+const validator = require("../../../middlewares/validator");
 
 router.get('/',
     bodyParser.json(),
@@ -16,6 +16,6 @@ router.get('/',
         // TODO add object schema validation "category" value
     ],
     validator(),
-    postsController.show);
+    searchPostsController.idSearcher);
 
 module.exports = router;

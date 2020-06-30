@@ -82,49 +82,4 @@ module.exports = {
       throw err;
     }
   },
-  show: async (req, res) => {
-    //TODO need to do filters
-
-    /*
-      {
-        "postId": 34, 
-        "ownerId": true, //require. is user search his own posts? if false user search in global searcher, if true only his own posts.
-        "title": "example title",
-        "category": {
-          "fantasy": true,
-          "romantic": false,
-          "drama": false,
-          "novel": false
-        }
-      }
-    */
-
-    //this is global searcher. for search owner posts will be second endpoint and for search posts from specific user will be third engine
-
-    const { postId, ownerId, title, language, public, category } = req.body;
-
-    let responseObj = {};
-    try {
-      if (!!postId) {
-
-        const findPost = await Posts.findAll({
-          include: [PostCategory],
-          where: { 
-            id: postId, 
-            public: true,
-          },
-        });
-
-          responseObj = findPost;
-          if (!findPost)
-          return res.status(404).json({
-            status: "failure",
-            msg: "There is no posts meeting the requirements",
-          });
-      }
-      res.status(200).json(responseObj);
-    } catch (err) {
-      throw err;
-    }
-  },
 };
