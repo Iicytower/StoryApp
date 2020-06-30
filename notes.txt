@@ -15,5 +15,5 @@
               }
             */
 
-            search engine should be for all people not onlue logged
+            search engine should be for all people, not only logged
             
