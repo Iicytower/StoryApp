@@ -14,3 +14,6 @@
                 }
               }
             */
+
+            search engine should be for all people not onlue logged
+            
