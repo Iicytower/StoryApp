@@ -10,10 +10,7 @@ const validator = require("../../../middlewares/validator");
 router.get('/',
     bodyParser.json(),
     [
-        // check('postId').isInt(),
-        // check('ownerId').isBoolean(),
-        // check('title').isString(),
-        // TODO add object schema validation "category" value
+        check('postsId').isArray().withMessage('wrong dataType'),
     ],
     validator(),
     searchPostsController.idSearcher);
