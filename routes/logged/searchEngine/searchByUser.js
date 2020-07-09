@@ -1,22 +1,28 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
-const searchPostsController = require('../../controllers/searchEngine/searchByUser');
+const searchPostsController = require("../../../controllers/searchEngine/searchByUser");
 const { check } = require("express-validator");
 const validator = require("../../../middlewares/validator");
 
-router.get('/',
-    bodyParser.json(),
-    [
-        // check('postId').isInt(),
-        // check('ownerId').isBoolean(),
-        // check('title').isString(),
-        // TODO add object schema validation "category" value
-    ],
-    validator(),
-    (req,res)=> res.end('dupa'));
-    // searchPostsController.userSearcher);
+router.get(
+  "/findUser",
+  bodyParser.json(),
+  [
+    check('owner').isString(),
+  ],
+  validator(),
+  searchPostsController.userSearcher
+);
+router.get(
+  "/userPost",
+  bodyParser.json(),
+  [
+    check("userId").isInt(),
+  ],
+  searchPostsController.userPostSearcher
+  );
 
 module.exports = router;

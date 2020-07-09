@@ -3,7 +3,7 @@ const router = express.Router();
 
 const bodyParser = require('body-parser');
 
-const searchPostsController = require('../../controllers/searchEngine/searchByFilters');
+const searchPostsController = require('../../../controllers/searchEngine/searchByFilters');
 const { check } = require("express-validator");
 const validator = require("../../../middlewares/validator");
 

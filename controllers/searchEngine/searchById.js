@@ -21,15 +21,12 @@ module.exports = {
               msg: "There is no posts meeting the requirements",
             });
           } else {
-            const findedPosts = findPost.reduce((acc, cur) => {
-              acc.push(cur.dataValues.id);
-              return acc;
-            }, []);
+            const foundPosts = findPost.map( ( { id } ) => id);
 
-            return res.status(601).json({ //custom status 601: "found some data you are asking about"
+            return res.status(601).json({ //custom status 601: "found some data you are asking about" TODO search is there not custom code
               status: "failure",
               msg: "Some records do not exist",
-              finded: findedPosts,
+              finded: foundPosts,
             });
           }
         }

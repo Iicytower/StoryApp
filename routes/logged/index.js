@@ -1,12 +1,9 @@
 const Router = require("express");
 const router = Router();
-const addPostRouter = require("./addPost");
-const removePostRouter = require("./removePost");
-const logoutRouter = require("./logout");
 
-router.use('/addPost', addPostRouter);
-router.use('/removePost', removePostRouter);
-router.use('/logout', logoutRouter);
+router.use('/addPost', require("./addPost"));
+router.use('/removePost', require("./removePost"));
+router.use('/logout', require("./logout"));
 router.use('/searchEngine', require('./searchEngine'));
 
 module.exports = router;
